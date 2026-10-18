@@ -27,7 +27,7 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage;
 public class AdFreeModule implements IXposedHookLoadPackage {
 
     private static final String TAG = "QmlAdFree";
-    private static final String TARGET_PKG = "com.qingmanlsland";
+    private static final String TARGET_PKG = "com.qingmandao";
 
     @Override
     public void handleLoadPackage(XC_LoadPackage.LoadPackageParam lp) {

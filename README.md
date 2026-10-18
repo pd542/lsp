@@ -1,6 +1,6 @@
 # QmlAdFree — 清漫 LS 免广告模块 (LSPosed / LSPlant)
 
-针对 `com.qingmanlsland`（混淆短名）的开屏/插屏/阅读器广告移除模块。
+针对 `com.qingmandao.app`（内部类命名空间 `com.qingmanlsland.*`）的开屏/插屏/阅读器广告移除模块。
 
 ## 补丁点（全部为「上游方法 hook」，不碰 `if-nez` 指令级 patch）
 
