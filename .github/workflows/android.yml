@@ -18,9 +18,6 @@ jobs:
           distribution: temurin
           java-version: '17'
 
-      # 不使用 android-actions/setup-android@v3:
-      # 新版 runner 的 sdkmanager 已移除 'tools' 包, 该 action 会因
-      # "Failed to find package 'tools'" 失败. 直接使用 runner 预装的 SDK。
       - name: Ensure Android SDK components
         run: |
           SDK="${ANDROID_HOME:-/usr/local/lib/android/sdk}"
@@ -51,6 +48,29 @@ jobs:
 
       - name: Build release APK
         run: gradle assembleRelease --no-daemon --stacktrace
+
+      - name: Inject java_init.list at APK root and re-sign
+        run: |
+          APKS=$(find app/build/outputs/apk/release -name "*.apk")
+          echo "APKs: $APKS"
+          for APK in $APKS; do
+            echo "=== $APK ==="
+            python3 ci/inject_java_init_list.py "$APK" "com.qingmanlsland.adpatch.AdFreeModule"
+            # re-sign with debug keystore (v1+v2), preserve alignment
+            SDK="${ANDROID_HOME:-/usr/local/lib/android/sdk}"
+            APKSIGNER=$(find "$SDK/build-tools" -name apksigner | sort | tail -1)
+            ZALIGN=$(find "$SDK/build-tools" -name zipalign | sort | tail -1)
+            echo "apksigner=$APKSIGNER zipalign=$ZALIGN"
+            "$ZALIGN" -f 4 "$APK" "$APK.aligned"
+            "$APKSIGNER" sign \
+              --ks "$HOME/.android/debug.keystore" \
+              --ks-pass pass:android \
+              --ks-key-alias androiddebugkey \
+              --key-pass pass:android \
+              --out "$APK" "$APK.aligned"
+            "$APKSIGNER" verify --verbose "$APK" | head -8
+            rm -f "$APK.aligned"
+          done
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4

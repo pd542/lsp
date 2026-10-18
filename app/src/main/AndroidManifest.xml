@@ -11,7 +11,7 @@
         <meta-data android:name="xposedmodule"       android:value="true" />
         <meta-data android:name="xposedmodulename"   android:value="@string/module_name" />
         <meta-data android:name="xposeddescription"  android:value="@string/module_desc" />
-        <meta-data android:name="xposedminversion"   android:value="93000" />
+        <meta-data android:name="xposedminversion"   android:value="102" />
         <meta-data android:name="xposedscope"        android:resource="@xml/xposed_scope" />
     </application>
 </manifest>
