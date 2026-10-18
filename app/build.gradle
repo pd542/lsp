@@ -1,0 +1,42 @@
+// app/build.gradle
+apply plugin: 'com.android.application'
+
+android {
+    namespace 'com.qingmanlsland.adpatch'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId "com.qingmanlsland.adpatch"
+        minSdk 23
+        targetSdk 34
+        versionCode 1
+        versionName "1.0"
+    }
+
+    // 用 debug keystore 给 release 签名, 保证产物可直接安装 (模块 APK 需签名)
+    signingConfigs {
+        debug {
+            storeFile file("${System.properties['user.home']}/.android/debug.keystore")
+            storePassword 'android'
+            keyAlias 'androiddebugkey'
+            keyPassword 'android'
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            signingConfig signingConfigs.debug
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}
+
+dependencies {
+    // 标准 Xposed API (api-82), 编译期依赖, 运行期由 LSPosed/LSPlant 提供
+    compileOnly files('libs/api-82.jar')
+}

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-sdk android:minSdkVersion="23" android:targetSdkVersion="34" />
+
+    <application
+        android:allowBackup="false"
+        android:label="@string/module_name"
+        android:icon="@drawable/ic_launcher">
+
+        <meta-data android:name="xposedmodule"       android:value="true" />
+        <meta-data android:name="xposedmodulename"   android:value="@string/module_name" />
+        <meta-data android:name="xposeddescription"  android:value="@string/module_desc" />
+        <meta-data android:name="xposedminversion"   android:value="93000" />
+        <meta-data android:name="xposedscope"        android:resource="@xml/xposed_scope" />
+    </application>
+</manifest>
