@@ -9,6 +9,7 @@ import android.util.Log;
 import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XC_MethodReplacement;
+import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 
@@ -33,12 +34,32 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage;
 public class AdFreeModule implements IXposedHookLoadPackage {
 
     private static final String TAG = "QmlAdFree";
+
+    static {
+        // 类被加载即打日志（诊断 FPA/兼容层是否真正实例化本类）
+        try {
+            Log.i(TAG, "AdFreeModule class loaded (static init), cl=" + AdFreeModule.class.getClassLoader());
+            XposedBridge.log("[QmlAdFree] AdFreeModule class loaded (static init)");
+        } catch (Throwable t) {
+            // ignore
+        }
+    }
     private static final String TARGET_PKG = "com.qingmandao";
     private static final String SHELL_APP = "com.dc7ea3";           // 壳 Application
     private static final String SHELL_HELPER = "com.db6993";        // 壳 native 辅助类
     private static final String REAL_APP_FIELD = "n";               // 真 Application 静态字段
 
     private boolean hooksInstalled = false;
+
+    /** 无参构造（一些兼容框架会反射 new 出来再调用） */
+    public AdFreeModule() {
+        try {
+            Log.i(TAG, "AdFreeModule ctor invoked");
+            XposedBridge.log("[QmlAdFree] AdFreeModule ctor invoked");
+        } catch (Throwable t) {
+            // ignore
+        }
+    }
 
     @Override
     public void handleLoadPackage(XC_LoadPackage.LoadPackageParam lp) {
